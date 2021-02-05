@@ -64,7 +64,7 @@ class Resource:
                     setattr(self, attr, attr_to_update[attr])
 
     def get_editable_attributes(self) -> list:
-        return ['parent', 'metadata']
+        return ['metadata']
 
     def get_resource_directory_name(self) -> str:
         raise NotImplementedError('Subclasses need to implement this method')

@@ -56,14 +56,15 @@ class Manager:
         if create_directory and item != None:
             try:
                 item.create(self.get_item_directory(item.parent))
-            except Exception as ex:
-                print(ex)
+            except:
                 # If we get an exception on the creating process, rollback the changes
                 resource['items'].remove(item.id)
                 self.items.pop(item.id)
 
     def update_item(self, item_id: str, data: dict):
-        pass
+        item = self.get_item(item_id)
+        if item != None:
+            item.update(self.get_item_directory(item.parent), data)
 
     def remove_item(self, item_id: str, remove_directory=False):
         item = self.get_item(item_id)

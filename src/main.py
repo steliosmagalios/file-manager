@@ -16,7 +16,7 @@ m.create_item({
     'metadata': {
         'name': 'Test Channel Name',
         'tags': ['test tags'],
-        'info': 'This is information about a channel.'
+        'info': 'This is information about a cha1nnel.'
     },
     'other': {
         'channel_id': 'testtesttest'
