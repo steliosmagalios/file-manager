@@ -8,7 +8,10 @@ from core.manager import Manager
 m = Manager(path.abspath('./YouTube'))
 m.add_resource(Channel, None)
 
-m.create_item('channel', {
+m.scan()
+
+m.create_item({
+    'type': 'channel',
     'parent': '',
     'metadata': {
         'name': 'Test Channel Name',

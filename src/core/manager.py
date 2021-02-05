@@ -1,3 +1,6 @@
+import os
+import json
+
 from os import path
 from uuid import uuid4
 
@@ -17,7 +20,15 @@ class Manager:
         self.scan()
 
     def scan(self):
-        pass
+        for dirpath, dirnames, filenames in os.walk(self.root):
+            if 'info.json' in filenames:
+                # If the info file exist, create the resource from the file
+                with open(path.join(dirpath, 'info.json'), 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    self.create_item(data, create_directory=False) # What should happen if the ids don't match?
+            elif dirpath != self.root:
+                # If the info file does not exist, all subfolders should be excluded
+                dirnames.clear()
 
     def add_resource(self, resource: Resource, parent: Resource):
         self.resources[resource.get_type()] = {
@@ -27,13 +38,13 @@ class Manager:
             'class': resource
         }
 
-    def create_item(self, resource_type: str, data: dict, create_directory=True):
+    def create_item(self, data: dict, create_directory=True):
         # If we are creating a new item, make a new uuid for the item
         if create_directory:
             data['id'] = uuid4().hex
 
         # Create the new item's object
-        resource = self.get_resource(resource_type)
+        resource = self.get_resource(data['type'])
         item = None
         if resource != None:
             item = resource['class'].parse(data)
@@ -50,11 +61,20 @@ class Manager:
                 resource['items'].remove(item.id)
                 self.items.pop(item.id)
 
-    def update_item(self, resource: Resource, data: dict):
+    def update_item(self, item_id: str, data: dict):
         pass
 
-    def remove_item(self, resource: Resource, data: dict, remove_directory=False):
-        pass
+    def remove_item(self, item_id: str, remove_directory=False):
+        item = self.get_item(item_id)
+        if item != None:
+            resource = self.get_resource(item.get_type())
+
+            # Remove the item from code
+            resource['items'].remove(item.id)
+            self.items.pop(item.id)
+
+            # Remove the item from the disk
+            item.remove(self.get_item_directory(item.parent), remove_directory)
 
     def has_resource(self, resource_type: str) -> bool:
         return resource_type in self.resources
