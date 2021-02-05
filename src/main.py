@@ -1,24 +1,15 @@
 from os import path
 
 from core.metadata import Metadata
-from components.channel import Channel
 from core.manager import Manager
+
+from components.channel import Channel
+from components.series import Series
 
 
 m = Manager(path.abspath('./YouTube'))
 m.add_resource(Channel, None)
+m.add_resource(Series, Channel)
 
 m.scan()
 
-m.create_item({
-    'type': 'channel',
-    'parent': '',
-    'metadata': {
-        'name': 'Test Channel Name',
-        'tags': ['test tags'],
-        'info': 'This is information about a cha1nnel.'
-    },
-    'other': {
-        'channel_id': 'testtesttest'
-    }
-}, True)

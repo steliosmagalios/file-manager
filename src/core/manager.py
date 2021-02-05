@@ -40,12 +40,16 @@ class Manager:
         }
 
     def create_item(self, data: dict, create_directory=True):
+        # Check if the parent is a valid item
+        resource = self.get_resource(data['type'])
+        if resource['parent'] != None and ('parent' not in data or data['parent'] == ''):
+            return None
+
         # If we are creating a new item, make a new uuid for the item
         if create_directory:
             data['id'] = uuid4().hex
 
         # Create the new item's object
-        resource = self.get_resource(data['type'])
         item = None
         if resource != None:
             item = resource['class'].parse(data)
@@ -60,11 +64,14 @@ class Manager:
                 # If we get an exception on the creating process, rollback the changes
                 resource['items'].remove(item.id)
                 self.items.pop(item.id)
+                return None
+        return item
 
     def update_item(self, item_id: str, data: dict):
         item = self.get_item(item_id)
         if item != None:
             item.update(self.get_item_directory(item.parent), data)
+        return item
 
     def remove_item(self, item_id: str, remove_directory=False):
         item = self.get_item(item_id)
