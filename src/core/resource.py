@@ -6,6 +6,7 @@ from os import path
 
 from .metadata import Metadata
 from .utils import create_hidden_file
+from .constants import Constants
 
 class Resource:
     
@@ -25,7 +26,7 @@ class Resource:
             os.mkdir(subdir_path)
 
         # Create the info.json file
-        info_file_path = path.join(resource_path, 'info.json')
+        info_file_path = path.join(resource_path, Constants.INFO_FILE_NAME)
         create_hidden_file(info_file_path, self.toJSON())
 
     def update(self, root:str, attr_to_update: dict):
@@ -41,7 +42,7 @@ class Resource:
 
         # Recreate the info.json file
         resource_path = path.join(root, self.get_resource_directory_name())
-        info_file_path = path.join(resource_path, 'info.json')
+        info_file_path = path.join(resource_path, Constants.INFO_FILE_NAME)
         create_hidden_file(info_file_path, self.toJSON())
 
     def remove(self, root: str, remove_directory: bool):
@@ -51,7 +52,7 @@ class Resource:
             shutil.rmtree(resource_path)
         else:
             # Just remove the info.json file
-            os.remove(path.join(resource_path, 'info.json'))
+            os.remove(path.join(resource_path, Constants.INFO_FILE_NAME))
 
     def update_attributes(self, attr_to_update: dict):
         for attr in attr_to_update:

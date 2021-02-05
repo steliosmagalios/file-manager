@@ -6,6 +6,7 @@ from uuid import uuid4
 
 from .metadata import Metadata
 from .resource import Resource
+from .constants import Constants
 
 
 class Manager:
@@ -21,9 +22,9 @@ class Manager:
 
     def scan(self):
         for dirpath, dirnames, filenames in os.walk(self.root):
-            if 'info.json' in filenames:
+            if Constants.INFO_FILE_NAME in filenames:
                 # If the info file exist, create the resource from the file
-                with open(path.join(dirpath, 'info.json'), 'r', encoding='utf-8') as f:
+                with open(path.join(dirpath, Constants.INFO_FILE_NAME), 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     self.create_item(data, create_directory=False) # What should happen if the ids don't match?
             elif dirpath != self.root:
