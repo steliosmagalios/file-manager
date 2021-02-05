@@ -24,8 +24,10 @@ class Resource:
             os.mkdir(subdir_path)
 
         # Create the info.json file
-        with open(path.join(resource_path, 'info.json'), 'w') as f:
+        info_file_path = path.join(resource_path, 'info.json')
+        with open(info_file_path, 'w') as f:
             f.write(self.toJSON())
+        os.system(f'attrib +h {info_file_path}')
     
     def update(self, root:str, attr_to_update: dict):
         # Get the last known basename before the update
@@ -40,8 +42,10 @@ class Resource:
 
         # Recreate the info.json file
         resource_path = path.join(root, self.get_resource_directory_name())
-        with open(path.join(resource_path, 'info.json'), 'w') as f:
+        info_file_path = path.join(resource_path, 'info.json')
+        with open(info_file_path, 'w') as f:
             f.write(self.toJSON())
+        os.system(f'attrib +h {info_file_path}')
 
     def remove(self, root: str, remove_directory: bool):
         resource_path = path.join(root, self.get_resource_directory_name())
