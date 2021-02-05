@@ -15,6 +15,9 @@ class Resource:
         self.parent = parent_id
         self.metadata = metadata
     
+    def __repr__(self):
+        return f'{self.__class__.__name__}: {self.get_resource_directory_name()}'
+    
     def create(self, root: str):
         # Create the directory
         resource_path = path.join(root, self.get_resource_directory_name())
@@ -76,13 +79,16 @@ class Resource:
         raise NotImplementedError('Subclasses need to implement this method')
 
     def toJSON(self):
-        return json.dumps({
+        return json.dumps(self.asJSON(), ensure_ascii=False, indent=2)
+    
+    def asJSON(self):
+        return {
             'type': self.get_type(),
             'id': self.id,
             'parent': self.parent,
             'metadata': self.metadata.get_json_data(),
             'other': self.get_json_data()
-        }, ensure_ascii=False, indent=2)
+        }
 
     @classmethod
     def parse(cls, data):

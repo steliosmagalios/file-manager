@@ -67,8 +67,8 @@ class Manager:
                 return None
         return item
 
-    def update_item(self, item_id: str, data: dict):
-        item = self.get_item(item_id)
+    def update_item(self, data: dict):
+        item = self.get_item(data['id'])
         if item != None:
             item.update(self.get_item_directory(item.parent), data)
         return item
@@ -84,6 +84,7 @@ class Manager:
 
             # Remove the item from the disk
             item.remove(self.get_item_directory(item.parent), remove_directory)
+        return item
 
     def has_resource(self, resource_type: str) -> bool:
         return resource_type in self.resources
@@ -102,3 +103,6 @@ class Manager:
             return self.root
         item = self.get_item(item_id)
         return path.join(self.get_item_directory(item.parent), item.get_resource_directory_name())
+
+    def get_items(self, predicate=lambda x: x):
+        return list(filter(predicate, self.items.values()))
