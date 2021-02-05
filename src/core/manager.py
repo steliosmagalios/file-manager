@@ -49,8 +49,6 @@ class Manager:
                 # If we get an exception on the creating process, rollback the changes
                 resource['items'].remove(item.id)
                 self.items.pop(item.id)
-                print('Error Enountered')
-            print('Created item')
 
     def update_item(self, resource: Resource, data: dict):
         pass
