@@ -108,4 +108,4 @@ class Manager:
         return list(filter(predicate, self.items.values()))
 
     def get_resources(self, predicate=lambda x: x) -> list:
-        return []
+        return [{k : r[k] for k in ['type', 'parent']} for r in self.resources.values()]

@@ -35,6 +35,8 @@ def create_json_response(data, status=200):
     res.headers['Access-Control-Allow-Origin'] = '*'
     return res
 
+def get_as_json(data):
+    return list(map(lambda x: x.asJSON(), data))
 
 @app.route('/api/<item_id>')
 def fetch_item(item_id):
@@ -46,9 +48,7 @@ def fetch_item(item_id):
 @app.route('/api/items/<resource_type>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def handle_resource(resource_type):
     if request.method == 'GET':
-        return create_json_response(
-            list(map(lambda item: item.asJSON(), m.get_items(lambda x: x.get_type() == resource_type)))
-        )
+        return create_json_response(get_as_json(m.get_items(lambda x: x.get_type() == resource_type)))
     else:
         body = request.get_json()
         item = None
@@ -66,16 +66,11 @@ def handle_resource(resource_type):
 
 @app.route('/api/items')
 def fetch_all_items():
-    return create_json_response(
-        list(map(lambda item: item.asJSON(), m.get_items()))
-    )
+    return create_json_response( get_as_json(m.get_items()))
 
 @app.route('/api/resources')
 def fetch_all_resources():
-    return None
-    # return create_json_response(
-    #     None
-    # )
+    return create_json_response(m.get_resources())
 
 if __name__ == '__main__':
     app.run(debug=True)
