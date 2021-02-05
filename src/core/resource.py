@@ -5,6 +5,7 @@ import shutil
 from os import path
 
 from .metadata import Metadata
+from .utils import create_hidden_file
 
 class Resource:
     
@@ -25,10 +26,8 @@ class Resource:
 
         # Create the info.json file
         info_file_path = path.join(resource_path, 'info.json')
-        with open(info_file_path, 'w') as f:
-            f.write(self.toJSON())
-        os.system(f'attrib +h {info_file_path}')
-    
+        create_hidden_file(info_file_path, self.toJSON())
+
     def update(self, root:str, attr_to_update: dict):
         # Get the last known basename before the update
         last_basename = self.get_resource_directory_name()
@@ -43,9 +42,7 @@ class Resource:
         # Recreate the info.json file
         resource_path = path.join(root, self.get_resource_directory_name())
         info_file_path = path.join(resource_path, 'info.json')
-        with open(info_file_path, 'w') as f:
-            f.write(self.toJSON())
-        os.system(f'attrib +h {info_file_path}')
+        create_hidden_file(info_file_path, self.toJSON())
 
     def remove(self, root: str, remove_directory: bool):
         resource_path = path.join(root, self.get_resource_directory_name())
@@ -65,7 +62,7 @@ class Resource:
                 else:
                     setattr(self, attr, attr_to_update[attr])
 
-    def get_editable_attributes(self):
+    def get_editable_attributes(self) -> list:
         return ['parent', 'metadata']
 
     def get_resource_directory_name(self) -> str:
@@ -77,9 +74,6 @@ class Resource:
     def get_json_data(self) -> dict:
         raise NotImplementedError('Subclasses need to implement this method')
 
-    def get_type(self) -> str:
-        return self.__class__.__name__.lower()
-
     def toJSON(self):
         return json.dumps({
             'type': self.get_type(),
@@ -88,3 +82,14 @@ class Resource:
             'metadata': self.metadata.get_json_data(),
             'other': self.get_json_data()
         }, ensure_ascii=False, indent=2)
+
+    @classmethod
+    def parse(cls, data):
+        args = [data[x] for x in ['id', 'parent']] # Get the ids in args
+        args.append(Metadata.parse(data['metadata'])) # Add the metadata to the args
+        kwargs = data['other'] if 'other' in data else {} # Create the kwargs
+        return cls(*args, **kwargs)
+   
+    @classmethod
+    def get_type(cls) -> str:
+        return cls.__name__.lower()

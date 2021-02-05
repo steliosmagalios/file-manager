@@ -1,16 +1,21 @@
+from os import path
+
 from core.metadata import Metadata
 from components.channel import Channel
+from core.manager import Manager
 
-import time
 
-c = Channel('test', '', Metadata('McNoob', [], ''), 'test')
-# c.create('YouTube')
+m = Manager(path.abspath('./YouTube'))
+m.add_resource(Channel, None)
 
-# time.sleep(5)
-
-c.update('YouTube', {
-    'parent': 'poop',
+m.create_item('channel', {
+    'parent': '',
     'metadata': {
-        'name': 'McPoop'
+        'name': 'Test Channel Name',
+        'tags': ['test tags'],
+        'info': 'This is information about a channel.'
+    },
+    'other': {
+        'channel_id': 'testtesttest'
     }
-})
+}, True)

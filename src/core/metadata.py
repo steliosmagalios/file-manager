@@ -18,3 +18,7 @@ class Metadata:
             # Check if the attribute can be updated
             if attr in ['name', 'tags', 'info']: 
                 setattr(self, attr, attr_to_update[attr])
+
+    @classmethod
+    def parse(cls, data):
+        return cls(**data)
