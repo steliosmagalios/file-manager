@@ -42,7 +42,6 @@ def fetch_item(item_id):
     return create_json_response(
         item.asJSON() if item != None else {'message': 'Not available'}
     )
-    # return item.toJSON() if item != None else 'Not available'
 
 @app.route('/api/items/<resource_type>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def handle_resource(resource_type):
@@ -59,6 +58,7 @@ def handle_resource(resource_type):
             item = m.update_item(body)
         elif request.method == 'DELETE':
             item = m.remove_item(request.args.get('id'), request.args.get('remove_directory') == 'true')
+
         if item != None:
             return create_json_response(item.asJSON())
         else:
@@ -69,6 +69,13 @@ def fetch_all_items():
     return create_json_response(
         list(map(lambda item: item.asJSON(), m.get_items()))
     )
+
+@app.route('/api/resources')
+def fetch_all_resources():
+    return None
+    # return create_json_response(
+    #     None
+    # )
 
 if __name__ == '__main__':
     app.run(debug=True)

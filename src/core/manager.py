@@ -39,7 +39,7 @@ class Manager:
             'class': resource
         }
 
-    def create_item(self, data: dict, create_directory=True):
+    def create_item(self, data: dict, create_directory=True) -> Resource:
         # Check if the parent is a valid item
         resource = self.get_resource(data['type'])
         if resource['parent'] != None and ('parent' not in data or data['parent'] == ''):
@@ -67,13 +67,13 @@ class Manager:
                 return None
         return item
 
-    def update_item(self, data: dict):
+    def update_item(self, data: dict) -> Resource:
         item = self.get_item(data['id'])
         if item != None:
             item.update(self.get_item_directory(item.parent), data)
         return item
 
-    def remove_item(self, item_id: str, remove_directory=False):
+    def remove_item(self, item_id: str, remove_directory=False) -> Resource:
         item = self.get_item(item_id)
         if item != None:
             resource = self.get_resource(item.get_type())
@@ -89,7 +89,7 @@ class Manager:
     def has_resource(self, resource_type: str) -> bool:
         return resource_type in self.resources
 
-    def get_resource(self, resource_type: str):
+    def get_resource(self, resource_type: str) -> dict:
         return self.resources[resource_type] if self.has_resource(resource_type) else None
     
     def has_item(self, item_id: str) -> bool:
@@ -98,11 +98,14 @@ class Manager:
     def get_item(self, item_id: str) -> Resource:
         return self.items[item_id] if self.has_item(item_id) else None
 
-    def get_item_directory(self, item_id: str):
+    def get_item_directory(self, item_id: str) -> str:
         if not item_id:
             return self.root
         item = self.get_item(item_id)
         return path.join(self.get_item_directory(item.parent), item.get_resource_directory_name())
 
-    def get_items(self, predicate=lambda x: x):
+    def get_items(self, predicate=lambda x: x) -> list:
         return list(filter(predicate, self.items.values()))
+
+    def get_resources(self, predicate=lambda x: x) -> list:
+        return []
