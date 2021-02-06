@@ -22,7 +22,6 @@ class Manager:
 
     def scan(self):
         # Clear the previous structure
-        self.resources = {}
         self.items = {}
 
         for dirpath, dirnames, filenames in os.walk(self.root):
@@ -46,7 +45,7 @@ class Manager:
     def create_item(self, data: dict, create_directory=True) -> Resource:
         # Check if the parent is a valid item
         resource = self.get_resource(data['type'])
-        if resource['parent'] != None and ('parent' not in data or data['parent'] == ''):
+        if resource == None or 'parent' not in data:
             return None
 
         # If we are creating a new item, make a new uuid for the item
