@@ -16,7 +16,7 @@ class Resource:
         self.metadata = metadata
     
     def __repr__(self):
-        return f'{self.__class__.__name__}: {self.get_resource_directory_name()}'
+        return f'{self.get_type()}: {self.get_resource_directory_name()}'
     
     def create(self, root: str):
         # Create the directory

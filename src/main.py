@@ -14,8 +14,7 @@ from components.episode import Episode
 
 app = Flask(__name__)
 
-# Instantiate the manager with the path to the root of the fire structure
-# m = Manager(path.abspath(sys.argv[0]))
+# Instantiate the manager with the path to the root of the file structure
 m = Manager(path.abspath('./YouTube'))
 
 # Add the types that the structure uses
@@ -73,4 +72,4 @@ def fetch_all_resources():
     return create_json_response(m.get_resources())
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

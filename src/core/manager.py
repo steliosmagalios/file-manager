@@ -21,6 +21,10 @@ class Manager:
         self.scan()
 
     def scan(self):
+        # Clear the previous structure
+        self.resources = {}
+        self.items = {}
+
         for dirpath, dirnames, filenames in os.walk(self.root):
             if Constants.INFO_FILE_NAME in filenames:
                 # If the info file exist, create the resource from the file
